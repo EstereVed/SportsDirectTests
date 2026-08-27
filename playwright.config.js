@@ -28,26 +28,26 @@ export default defineConfig({
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
     // baseURL: 'http://localhost:3000',
+    headless:false,
 
+    launchOptions: {
+    args: ['--disable-blink-features=AutomationControlled'],
+  },
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
   },
 
   /* Configure projects for major browsers */
   projects: [
-    // {
-    //   name: 'chromium',
-    //   use: { ...devices['Desktop Chrome'],
-    //     // launchOptions:{
-    //     //   args: ['--disable-http2']
-    //     // }
-    //    },
-    // },
-
-   { 
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
     },
+
+  //  { 
+  //     name: 'firefox',
+  //     use: { ...devices['Desktop Firefox'] },
+  //   },
 
     // {
     //   name: 'webkit',

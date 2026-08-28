@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { InventoryPage } from '../page_objects/InventoryPage';
 
-
 test ('filter boys jackets', async({ page }) =>{
     const inventoryPage = new InventoryPage(page);
 

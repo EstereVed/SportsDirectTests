@@ -1,70 +1,45 @@
 import { test, expect } from '@playwright/test';
+import { InventoryPage } from '../page_objects/InventoryPage';
 
-test ('add item to cart', async({ page }) =>{
+test ('filter boys jackets', async({ page }) =>{
+    const inventoryPage = new InventoryPage(page);
+
     await page.goto('https://www.sportsdirect.lt/');
+
+    await inventoryPage.acceptCookies();
+
+    await inventoryPage.sportButton.click();
+    await expect(page).toHaveURL('https://www.sportsdirect.lt/sport');
+
+    await inventoryPage.outdoorButton.click();
+    await expect(page).toHaveURL('https://www.sportsdirect.lt/outdoor');
+
+    await inventoryPage.kidsClothingLink.click();
+    await expect(page).toHaveURL('https://www.sportsdirect.lt/outdoor/outdoor-clothing/kids-outdoor-clothing');
+
+    // await inventoryPage.brandFilterCheckbox.filter({hasText:"Gelert"}).check();
+    await inventoryPage.checkFilter('Gelert');
+    await expect(inventoryPage.selectedBrandLabel).toHaveText('Gelert');
     
-    const rejectCookiesButton = page.locator ('#onetrust-reject-all-handler');
-    try{
-        await rejectCookiesButton.waitFor({state:'visible', timeout: 5000});
-        await rejectCookiesButton.click();
-    }catch(error){
-        console.log ('Reject cookies button not found',error);
-    }
+    // await inventoryPage.sexFilterCheckbox.check();
+    await inventoryPage.checkFilter('Berniukams');
+    await expect(inventoryPage.selectedSexLabel).toHaveText('Berniukams');
 
-    const runningFilterButton = page.locator ('.QuickLinks_text__TmwxA',{hasText:'Running'});
-    await runningFilterButton.click();
-    await expect(page).toHaveURL('https://www.sportsdirect.lt/running');
-    // await page.pause();
+    // await inventoryPage.ageFilterCheckbox.check();
+    await inventoryPage.checkFilter('11 - 12 Years');
+    await expect(inventoryPage.selectedAgeLabel).toHaveText('11 - 12 Years');
 
-    const womensButton = page.locator('.QuickLinks_text__TmwxA', {hasText:'Womens'});
-    await womensButton.click();
-    await expect(page).toHaveURL('https://www.sportsdirect.lt/running/all-ladies-running');
-    // // await page.pause();
+    // await inventoryPage.styleFilterCheckbox.check();
+    await inventoryPage.checkFilter('Vandeniui atsparios striukės');
+    await expect(inventoryPage.selectedStyleLabel).toHaveText('Vandeniui atsparios striukės');
 
-    const size10Checkbox = page.locator('[data-filterurlkey = "10"]');
-    await size10Checkbox.click();
-    const selectedSizeLabel = page.locator('#SelectedFiltersWrapper-257862');
-    await expect(selectedSizeLabel).toHaveText('10');
-    // // await page.pause();
+    await expect(inventoryPage.totalProductsCount).toHaveText('5');
 
-    const colorBlackCheckbox = page.locator('[data-item = "ACOL^Juoda"]');
-    await colorBlackCheckbox.click();
-    const selectedColorLabel = page.locator('#SelectedFiltersWrapper-ACOL');
-    await expect(selectedColorLabel).toHaveText('Juoda');
-    // // await page.pause();
+    await expect(inventoryPage.filteredProduct.first()).toBeVisible();
+    await expect(inventoryPage.filteredProduct).toHaveCount(5);
 
-    const priceCheckbox = page.locator('[data-filterurlkey = "£100 to £250"]');
-    await priceCheckbox.click();
-    const selectedPriceLabel = page.locator('#SelectedFiltersWrapper-APRI');
-    await expect(selectedPriceLabel).toHaveText('100 € iki 250 €');
-    // // await page.pause();
-
-    const womensTightsItem = page.locator('.productdescriptionname', {hasText:'Women\'s 7\/8 Tights'});
-    await womensTightsItem.click();
-    await expect(page).toHaveURL('https://www.sportsdirect.lt/on-womens-7/8-tights-450477#colcode=45047703');
-    // // await page.pause();
-
-    const tightsColorButton = page.locator('#cvli45047703');
-    await tightsColorButton.click();
-    //upd:
-    const tightsSizeButton = page.locator('[role="radio"][data-sizevarid = "350"]');
-    await tightsSizeButton.click();
-    const addToCartButton = page.locator('#sAddToBagWrapper.ImgButWrap').nth(1);
-
-    
-
-    await addToCartButton.click();
-
-    // const itemCountIcon = page.locator('#mobBasketQuantity');
-    // await expect(addToCartButton).toHaveText(/Pridėjimas\.\.\./, { timeout: 10_000 });
-    // await expect(addToCartButton).toHaveText(/Pridėta į krepšelį/);
-    // const itemCountIcon = page.locator('#mobBasketQuantity');
-    // await expect(addToCartButton).toHaveAttribute('mobbasketquantity', /Pridėta/);
-    // await page.pause();
-
-    // const cartButton = page.locator('#bagQuantityContainer');
-    // await cartButton.click();
     await page.pause();
+   
 })
 
 
